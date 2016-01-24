@@ -22,10 +22,10 @@ namespace MvcMovie.Controllers
         // 
         // GET: /HelloWorld/Welcome/ 
 
-        public string Welcome(string name, int numTimes = 1)
+        public string Welcome(string name, int ID = 1)
         {
             return HtmlEncoder.Default.HtmlEncode(
-                "Hello " + name + ", NumTimes is: " + numTimes);
+                "Hello " + name + ", ID: " + ID);
         }
     }
 }
