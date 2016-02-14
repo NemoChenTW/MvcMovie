@@ -3,6 +3,7 @@ using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.Data.Entity;
 using MvcMovie.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MvcMovie.Controllers
@@ -16,14 +17,27 @@ namespace MvcMovie.Controllers
             _context = context;    
         }
 
-        public IActionResult Index(string searchString)
+        public IActionResult Index(string movieGenre, string searchString)
         {
+            var GenreQry = from m in _context.Movie
+                            orderby m.Genre
+                            select m.Genre;
+
+            var GenreList = new List<string>();
+            GenreList.AddRange(GenreQry.Distinct());
+            ViewData["movieGenre"] = new SelectList(GenreList);
+
             var movies = from m in _context.Movie
-                         select m;
+                            select m;
 
             if (!String.IsNullOrEmpty(searchString))
             {
                 movies = movies.Where(s => s.Title.Contains(searchString));
+            }
+
+            if (!string.IsNullOrEmpty(movieGenre))
+            {
+                movies = movies.Where(x => x.Genre == movieGenre);
             }
 
             return View(movies);
