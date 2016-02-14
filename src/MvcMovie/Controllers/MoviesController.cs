@@ -1,8 +1,9 @@
-using System.Linq;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.Data.Entity;
 using MvcMovie.Models;
+using System;
+using System.Linq;
 
 namespace MvcMovie.Controllers
 {
@@ -15,10 +16,17 @@ namespace MvcMovie.Controllers
             _context = context;    
         }
 
-        // GET: Movies
-        public IActionResult Index()
+        public IActionResult Index(string searchString)
         {
-            return View(_context.Movie.ToList());
+            var movies = from m in _context.Movie
+                         select m;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                movies = movies.Where(s => s.Title.Contains(searchString));
+            }
+
+            return View(movies);
         }
 
         // GET: Movies/Details/5
